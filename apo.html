@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Special Message For You</title>
+  <style>
+    /* Google Fonts Import for stylish cursive and calligraphy */
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Parisienne&display=swap');
+
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #ffd1dc; /* Light pink background for a playful theme */
+      color: #8b3a62; /* Dark pink text for contrast */
+      overflow-x: hidden;
+      font-family: 'Parisienne', cursive;
+      transition: background-color 0.5s ease;
+    }
+
+    /* Loader Section */
+    .loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #ffd1dc;
+      background-image: linear-gradient(135deg, rgba(255,209,220,0.9), rgba(255,225,230,0.9));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 1000;
+      transition: opacity 1s ease-out;
+    }
+    .welcome-text {
+      font-size: 2.8rem;
+      margin-bottom: 30px;
+      text-align: center;
+      color: #8b3a62;
+      text-shadow: 0 0 8px rgba(139,58,98,0.6);
+    }
+    .loader-image {
+      width: 400px;
+      height: 400px;
+      border-radius: 10%;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(139,58,98,0.5);
+      border: 3px solid rgba(139,58,98,0.5);
+      transition: transform 0.3s ease;
+    }
+    .loader-image:hover {
+      transform: scale(1.05);
+    }
+    .click-instruction {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #8b3a62;
+    }
+
+    /* Main Content */
+    .main-content {
+      display: none;
+      padding: 20px;
+    }
+    .letter-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 40px;
+      border-radius: 15px;
+      background-color: #fff0f5; /* Very light pink (lavender blush) */
+      box-shadow: 0 0 20px rgba(139,58,98,0.2);
+      position: relative;
+      border: 1px solid rgba(139,58,98,0.3);
+    }
+    .letter-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    .her-photo {
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+      object-fit: cover;
+      margin-right: 20px;
+      box-shadow: 0 0 10px rgba(139,58,98,0.3);
+      border: 2px solid rgba(139,58,98,0.3);
+    }
+    .letter-header h2 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.8rem;
+      color: #8b3a62;
+    }
+    .letter-content {
+      font-size: 1.5rem;
+      line-height: 1.8;
+      color: #8b3a62;
+      position: relative;
+      min-height: 250px;
+      white-space: pre-wrap;
+    }
+    .pen {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-image: url('pen.png'); /* Replace with your pen image URL */ 
+      background-size: contain;
+      background-repeat: no-repeat;
+      display: none;
+      z-index: 10;
+    }
+
+    /* Signature Section - Aligned to left */
+    .signature-container {
+      margin-top: 40px;
+      text-align: left;
+    }
+    .commitment {
+      font-size: 1.3rem;
+      font-style: italic;
+      color: #8b3a62;
+      opacity: 0;
+      animation: fadeIn 1.5s forwards 0.5s;
+    }
+    .signature {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.8rem;
+      color: #8b3a62;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid #8b3a62;
+      width: 0;
+      opacity: 0;
+      animation: writeSignature 3s steps(30) forwards 2s, fadeIn 1.5s forwards 2s;
+    }
+    @keyframes writeSignature {
+      from { width: 0; }
+      to { width: 100%; border-right: none; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader Section -->
+  <div class="loader-container">
+    <h1 class="welcome-text">Hey Amanya,<br>I Have Something For You...</h1>
+    <img src="IMG-20240415-WA0007.jpg" alt="Our Photo" class="loader-image" id="startButton" />
+    <p class="click-instruction">I am Sorry....</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="letter-container">
+      <div class="letter-header">
+        <img src="IMG_20240406_094703.jpg" alt="Her Photo" class="her-photo" />
+        <h2>My Dearest,</h2>
+      </div>
+
+      <!-- Letter Content Area with Animation -->
+      <div class="letter-content" id="letterText">
+        <!-- The letter will be dynamically written here -->
+      </div>
+      <div class="pen"></div>
+
+      <!-- Signature Section (Aligned Left) -->
+      <div class="signature-container">
+        <p class="commitment"></p>
+        <p class="signature"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const startButton = document.getElementById('startButton');
+      const loaderContainer = document.querySelector('.loader-container');
+      const mainContent = document.querySelector('.main-content');
+      const letterText = document.getElementById('letterText');
+      const pen = document.querySelector('.pen');
+      
+      // Full letter content (using newline characters for formatting)
+      const letterContent = ` I want to take this moment to express my deepest apologies for hurting you. The thought of causing you pain weighs heavily on my heart, and I need you to know how truly sorry I am.
+
+                    You have been nothing but patient, kind, and loving towards me, and I failed to reciprocate that same level of care. I realize now that my actions were thoughtless and I take full responsibility for them.
+
+                    Every moment we've spent together has been precious to me, and I've been reflecting on all the beautiful memories we've created. Your smile, your laughter, your understanding – they mean the world to me.
+
+                    I understand that words alone can't undo what happened, but I hope they can be the first step towards healing. I promise to be more mindful of your feelings, to communicate better, and to cherish what we have.
+
+                    You deserve someone who makes you feel loved and appreciated every single day, and I want to be that person for you. I want to earn back your trust and show you through my actions that I've learned from this mistake.
+
+                    Our relationship means everything to me, and I'm committed to growing and becoming a better partner to you. I only ask for a chance to prove that to you.
+
+
+                    I promise these mistakes will never happen again.
+
+                    Aditya Vaish
+                `;
+      
+      startButton.addEventListener('click', function() {
+        loaderContainer.style.opacity = '0';
+        setTimeout(function() {
+          loaderContainer.style.display = 'none';
+          mainContent.style.display = 'block';
+          startWritingAnimation();
+        }, 1000);
+      });
+      
+      function startWritingAnimation() {
+        pen.style.display = 'block';
+        let index = 0;
+        function writeText() {
+          if (index < letterContent.length) {
+            // Append next character. Preserve newlines as <br> tags.
+            if (letterContent[index] === "\n") {
+              letterText.innerHTML += "<br>";
+            } else {
+              letterText.innerHTML += letterContent[index];
+            }
+            index++;
+            // Move the pen to roughly the end of the text block (approximation)
+            const range = document.createRange();
+            range.selectNodeContents(letterText);
+            const rect = range.getBoundingClientRect();
+            const letterRect = letterText.getBoundingClientRect();
+            pen.style.top = (rect.bottom - letterRect.top - 20) + 'px';
+            pen.style.left = (rect.right - letterRect.left) + 'px';
+            setTimeout(writeText, 50);
+          } else {
+            pen.style.display = 'none';
+          }
+        }
+        writeText();
+      }
+    });
+  </script>
+</body>
+</html>
